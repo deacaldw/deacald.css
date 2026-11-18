@@ -47,13 +47,13 @@ Segmented controls and steppers fire a `deacald:change` event.
 
 ## Use it in other projects
 
-This folder is the one place where the kit gets changed. Other projects keep a copy in their `res/` folder, and they update it with `sync-deacald.mjs`:
+This repo is the one place where the kit gets changed. Other projects keep a copy in their `res/` folder, and they update it with a small script called `sync-deacald.mjs`:
 
 ```bash
 node sync-deacald.mjs
 ```
 
-The script looks for this folder next to the project, or next to any folder above it, up to 5 levels up. Keep this folder close to the projects that use it.
+The script downloads `deacald.css` and `deacald.js` from this repo's `main` branch. Push your changes here first, and then run it in each project.
 
 ## See the docs
 
