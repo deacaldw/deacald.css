@@ -57,6 +57,8 @@ Then load `res/deacald/deacald.css` and `res/deacald/deacald.js` in your page. T
 
 ## See the docs
 
+The docs are on the demo page at [deacald.css.deancaldwell.com](https://deacald.css.deancaldwell.com/). To run them locally instead, use:
+
 ```bash
 python -m http.server 8000
 ```
