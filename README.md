@@ -2,7 +2,7 @@
 
 This is my UI kit. It's a soft, light style in blue and green with crisp cards and gentle glows. It's just one CSS file and one JS file, so there's nothing to install or build.
 
-Open `index.html` to see every component along with its code.
+You can see every component along with its code on the demo page: [deacald.css.deancaldwell.com](https://deacald.css.deancaldwell.com/). It's the same page as `index.html` in this repo.
 
 ## Use it
 
