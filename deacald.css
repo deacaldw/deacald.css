@@ -658,7 +658,7 @@ a.art-card:hover .art-card__bob { transform: translateY(-5px); }
 .tilt:is(.btn, a.widget, button.widget, a.art-card):hover { transform: var(--tilt) var(--lift); }
 /* Parallax: the contents drift toward the pointer as one layer floating above
    the card. Only direct children move, so everything inside moves the same. */
-.tilt > * { translate: calc(var(--px, 0) * var(--depth, 3.5px)) calc(var(--py, 0) * var(--depth, 3.5px)); transition: translate .35s var(--ease-out); }
+.tilt > * { translate: calc(var(--px, 0) * var(--depth, 14px)) calc(var(--py, 0) * var(--depth, 14px)); transition: translate .35s var(--ease-out); }
 
 /* .reveal containers get .is-in once seen; their children play after --d */
 .reveal:not(.is-in) :is(.reveal-up, .reveal-fade, .reveal-wipe, .reveal-pop) { opacity: 0; }

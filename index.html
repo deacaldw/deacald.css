@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geologica:wght@100..900&family=JetBrains+Mono:wght@400..700&display=swap">
   <!-- bump ?v= after editing, so browsers don't keep an old copy -->
-  <link rel="stylesheet" href="deacald.css?v=12">
+  <link rel="stylesheet" href="deacald.css?v=14">
   <script defer src="deacald.js?v=7"></script>
   <style>
     /* ---- docs page only ---- */
@@ -46,7 +46,9 @@
     .ex__demo--stack { display: grid; justify-items: start; }
     .ex__demo--wide { display: block; }
     .ex__code { position: relative; margin: 0; padding: 14px 16px; font: 12.5px/1.6 var(--font-mono); color: var(--ink-soft); background: var(--card-2); border-radius: var(--r-card); overflow-x: auto; white-space: pre; }
-    .ex__code + .ex__code { margin-top: 8px; }
+    /* the copy button sits on a wrapper, so it stays put while the code scrolls sideways */
+    .ex__snippet { position: relative; }
+    .ex__snippet + .ex__snippet { margin-top: 8px; }
     .ex__copy { position: absolute; top: 8px; right: 8px; }
 
     .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 16px; width: 100%; }
@@ -884,7 +886,10 @@ addEventListener("DOMContentLoaded", () => {
     copy.className = "btn btn--sm ex__copy";
     copy.textContent = "Copy";
     copy.onclick = () => navigator.clipboard.writeText(code).then(() => { copy.textContent = "Copied"; setTimeout(() => { copy.textContent = "Copy"; }, 1200); });
-    pre.prepend(copy);
+    const snippet = document.createElement("div");
+    snippet.className = "ex__snippet";
+    pre.before(snippet);
+    snippet.append(pre, copy);
   });
 
   $("icon-grid").innerHTML = deacald.icons.map((n) => `<span>${deacald.icon(n)}${n}</span>`).join("");
