@@ -1,0 +1,950 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>deacald.css</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geologica:wght@100..900&family=JetBrains+Mono:wght@400..700&display=swap">
+  <!-- bump ?v= after editing, so browsers don't keep an old copy -->
+  <link rel="stylesheet" href="deacald.css?v=12">
+  <script defer src="deacald.js?v=7"></script>
+  <style>
+    /* ---- docs page only ---- */
+    body { background: var(--card); }
+    .topline { display: flex; align-items: center; justify-content: space-between; gap: 16px; max-width: 1180px; margin: 0 auto; padding: 10px 24px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--ink); text-decoration: none; }
+    .brand svg { width: 28px; height: 28px; }
+    .hero-inner { max-width: 1180px; margin: 0 auto; padding: 64px 24px 72px; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 32px 64px; }
+    .hero-inner > div { flex: 1.8 1 460px; display: grid; gap: 16px; }
+    .hero-stats { flex: 0 1 300px; display: grid; gap: 14px; margin: 0; padding-left: 32px; border-left: 1px solid rgb(255 255 255 / .24); }
+    .hero-stats dd { margin: 0; }
+
+    .docs { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 48px; max-width: 1180px; margin: 0 auto; padding: 8px 24px 120px; }
+    .side { position: sticky; top: 64px; align-self: start; max-height: calc(100vh - 84px); overflow: auto; scrollbar-width: thin; padding-top: 32px; font-size: .88rem; }
+    .side .kicker { margin: 18px 0 6px; padding-left: 10px; }
+    .side .kicker:first-child { margin-top: 0; }
+    .side ul { margin: 0; padding: 0; list-style: none; }
+    .side a { display: block; padding: 4px 10px; border-radius: var(--r-sm); color: var(--ink-soft); text-decoration: none; }
+    .side a:hover { color: var(--blue-ink); background: var(--hover); }
+    @media (max-width: 860px) {
+      .docs { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 8px 16px 80px; }
+      .side { position: static; max-height: none; }
+      .side ul { display: flex; flex-wrap: wrap; gap: 2px; }
+      .hero-inner { padding: 40px 16px 48px; }
+      .hero-stats { padding-left: 0; border-left: 0; }
+    }
+
+    .doc-section { padding-top: 48px; scroll-margin-top: 60px; }
+    .doc-section > h2 { margin-bottom: 4px; font-size: clamp(1.35rem, 4vw, 1.6rem); }
+    .doc-section > p { max-width: 64ch; color: var(--ink-soft); }
+    .doc-part { margin: 72px 0 0; padding-top: 20px; border-top: 1px solid var(--line); }
+
+    /* an example: the component on the page, its code underneath */
+    .ex { margin-top: 14px; }
+    .ex__demo { isolation: isolate; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 16px 0 22px; }
+    .ex__demo--stack { display: grid; justify-items: start; }
+    .ex__demo--wide { display: block; }
+    .ex__code { position: relative; margin: 0; padding: 14px 16px; font: 12.5px/1.6 var(--font-mono); color: var(--ink-soft); background: var(--card-2); border-radius: var(--r-card); overflow-x: auto; white-space: pre; }
+    .ex__code + .ex__code { margin-top: 8px; }
+    .ex__copy { position: absolute; top: 8px; right: 8px; }
+
+    .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 16px; width: 100%; }
+    .swatch { display: grid; gap: 4px; font-size: var(--fs-sm); }
+    .swatch i { height: 52px; background: var(--tone); border: 1px solid var(--line); border-radius: var(--r-md); }
+    .shape { display: grid; place-items: center; width: 140px; height: 84px; background: var(--card); border: 1px solid var(--line); font: .78rem var(--font-mono); text-align: center; }
+    .weights { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 1.5rem; }
+    .icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 10px; width: 100%; }
+    .icon-grid span { display: grid; justify-items: center; gap: 6px; padding: 14px 4px; font-size: .72rem; color: var(--ink-mute); background: var(--card-2); border-radius: var(--r-md); }
+    .icon-grid .icon { width: 24px; height: 24px; color: var(--ink); }
+    .motion { display: grid; gap: 10px; width: min(100%, 520px); }
+    .motion > div { display: grid; grid-template-columns: 150px 1fr; align-items: center; gap: 14px; font-size: var(--fs-sm); }
+    .motion-track { position: relative; height: 32px; background: var(--track); border-radius: 16px; }
+    .motion-track i { position: absolute; top: 5px; left: 5px; width: 22px; height: 22px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 2px #fff; transition: left .9s var(--e); }
+    .motion.is-on .motion-track i { left: calc(100% - 27px); }
+    .phone { display: flex; flex-direction: column; width: min(360px, 100%); background: light-dark(#f7f9fc, var(--paper-2)); border: 1px solid var(--line); border-radius: 44px; box-shadow: var(--shadow-pop); }
+    .dash { --cell: 150px; --gap: 16px; perspective: 1400px; }
+    .dash .lc { margin: 4px -6px -8px; width: calc(100% + 12px); }
+    .dice { display: inline-block; font-size: 2.2rem; }
+    .dice.is-rolling { animation: dice-roll .5s var(--ease-out); }
+    @keyframes dice-roll { 40% { transform: rotate(-25deg) scale(1.15); } 70% { transform: rotate(15deg); } }
+    .phone__status { display: flex; justify-content: space-between; align-items: center; padding: 12px 28px 6px; font-size: .85rem; font-weight: 500; }
+    .phone__body { padding: 4px 14px 18px; }
+    .phone > .tabbar { border-radius: 0 0 44px 44px; }
+  </style>
+</head>
+<body>
+<header class="glass-bar">
+  <div class="topline">
+    <a class="brand" href="#top">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#0b1730"/><rect x="7" y="17" width="4" height="8" rx="1.5" fill="#2f6fed"/><rect x="14" y="12" width="4" height="13" rx="1.5" fill="#5b93ff"/><rect x="21" y="7" width="4" height="18" rx="1.5" fill="#1fa971"/></svg>
+      deacald.css
+    </a>
+    <div class="segmented segmented--sm" role="group" aria-label="Jump to">
+      <button value="install" aria-pressed="true">Start</button>
+      <button value="buttons" aria-pressed="false">Components</button>
+      <button value="ex-settings" aria-pressed="false">Examples</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero reveal" id="top">
+  <div class="hero-inner">
+    <div>
+      <span class="kicker reveal-up">A soft-light UI style</span>
+      <h1 class="reveal-up" style="--d:80ms">deacald.css</h1>
+      <p class="lede reveal-up" style="--d:160ms">Blue and green on cool paper. Crisp cards, gentle glows, one variable font. No build step.</p>
+    </div>
+    <dl class="hero-stats">
+      <div class="stat reveal-up" style="--d:240ms"><dt class="stat__label">Components</dt><dd class="stat__value" data-count>36</dd></div>
+      <div class="stat reveal-up" style="--d:320ms"><dt class="stat__label">Dependencies</dt><dd class="stat__value">0</dd></div>
+    </dl>
+  </div>
+</section>
+
+<div class="docs">
+  <nav class="side" aria-label="Contents">
+    <span class="kicker">Start</span>
+    <ul><li><a href="#install">Getting started</a></li></ul>
+    <span class="kicker">Foundations</span>
+    <ul>
+      <li><a href="#colours">Colours</a></li>
+      <li><a href="#type">Type</a></li>
+      <li><a href="#shape">Shape and shadow</a></li>
+      <li><a href="#motion">Motion and hover</a></li>
+      <li><a href="#icons">Icons</a></li>
+    </ul>
+    <span class="kicker">Components</span>
+    <ul>
+      <li><a href="#buttons">Buttons</a></li>
+      <li><a href="#segmented">Segmented control</a></li>
+      <li><a href="#switch">Switch, stepper, slider</a></li>
+      <li><a href="#fields">Fields</a></li>
+      <li><a href="#errors">Errors</a></li>
+      <li><a href="#text">Inset and warning text</a></li>
+      <li><a href="#chips">Chips</a></li>
+      <li><a href="#badges">Badges</a></li>
+      <li><a href="#cards">Cards</a></li>
+      <li><a href="#art-cards">Art cards</a></li>
+      <li><a href="#lists">Lists</a></li>
+      <li><a href="#navbar">Navigation</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#launcher">Launcher</a></li>
+      <li><a href="#progress">Progress</a></li>
+      <li><a href="#widgets">Widgets</a></li>
+      <li><a href="#digits">Digit tiles</a></li>
+      <li><a href="#achievements">Achievement popups</a></li>
+      <li><a href="#toast">Toast and confetti</a></li>
+      <li><a href="#modal">Confirm modal</a></li>
+      <li><a href="#tooltip">Tooltip</a></li>
+      <li><a href="#charts">Charts</a></li>
+    </ul>
+    <span class="kicker">Page</span>
+    <ul>
+      <li><a href="#glass-bar">Glass bar</a></li>
+      <li><a href="#hero">Foil hero</a></li>
+      <li><a href="#stats">Stats</a></li>
+      <li><a href="#table">Data table</a></li>
+    </ul>
+    <span class="kicker">Effects</span>
+    <ul>
+      <li><a href="#glow">Pointer glow</a></li>
+      <li><a href="#tilt">Tilt card</a></li>
+      <li><a href="#reveal">Reveal and count-up</a></li>
+    </ul>
+    <span class="kicker">Examples</span>
+    <ul>
+      <li><a href="#ex-settings">Settings screen</a></li>
+      <li><a href="#ex-dashboard">Dashboard</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section class="doc-section" id="install">
+      <h2>Getting started</h2>
+      <p>Copy <code>deacald.css</code> and <code>deacald.js</code> into your project and link them.</p>
+      <pre class="ex__code">&lt;link rel="preconnect" href="https://fonts.gstatic.com" crossorigin&gt;
+&lt;link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geologica:wght@100..900&amp;family=JetBrains+Mono:wght@400..700&amp;display=swap"&gt;
+&lt;link rel="stylesheet" href="deacald.css"&gt;
+&lt;script defer src="deacald.js"&gt;&lt;/script&gt;</pre>
+    </section>
+
+    <p class="doc-part kicker">Foundations</p>
+
+    <section class="doc-section" id="colours">
+      <h2>Colours</h2>
+      <p>Blue and green by default. Components take their colour from <code>--tone</code>, which flows down to their contents: any <code>--green</code>, <code>--red</code>, <code>--gold</code> or tier modifier sets it, or set it inline.</p>
+      <div class="ex"><div class="ex__demo">
+        <div class="swatches">
+          <div class="swatch"><i style="--tone:var(--blue)"></i><code>--blue</code></div>
+          <div class="swatch"><i style="--tone:var(--blue-2)"></i><code>--blue-2</code></div>
+          <div class="swatch"><i style="--tone:var(--blue-tint)"></i><code>--blue-tint</code></div>
+          <div class="swatch"><i style="--tone:var(--green)"></i><code>--green</code></div>
+          <div class="swatch"><i style="--tone:var(--green-2)"></i><code>--green-2</code></div>
+          <div class="swatch"><i style="--tone:var(--green-tint)"></i><code>--green-tint</code></div>
+          <div class="swatch"><i style="--tone:var(--night)"></i><code>--night</code></div>
+          <div class="swatch"><i style="--tone:var(--ink)"></i><code>--ink</code></div>
+          <div class="swatch"><i style="--tone:var(--ink-mute)"></i><code>--ink-mute</code></div>
+          <div class="swatch"><i style="--tone:var(--track)"></i><code>--track</code></div>
+          <div class="swatch"><i style="--tone:var(--red)"></i><code>--red</code></div>
+          <div class="swatch"><i style="--tone:var(--gold)"></i><code>--gold</code></div>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="type">
+      <h2>Type</h2>
+      <p>Geologica in variable weights; JetBrains Mono for data.</p>
+      <div class="ex"><div class="ex__demo ex__demo--stack">
+        <h1 style="margin:0">Heading one</h1>
+        <h2 style="margin:0">Heading two</h2>
+        <span class="lede" style="margin:0">A light lede.</span>
+        <p style="margin:0">Body text.</p>
+        <div class="weights"><span style="font-weight:200">200</span><span style="font-weight:300">300</span><span style="font-weight:400">400</span><span style="font-weight:600">600</span><span style="font-weight:800">800</span></div>
+        <span class="mono">MONO 0123456789</span>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="shape">
+      <h2>Shape and shadow</h2>
+      <div class="ex"><div class="ex__demo">
+        <div class="shape" style="border-radius:var(--r-md);box-shadow:var(--shadow-sm)">--r-md<br>--shadow-sm</div>
+        <div class="shape" style="border-radius:var(--r-card);box-shadow:var(--shadow)">--r-card<br>--shadow</div>
+        <div class="shape" style="border-radius:var(--r-pop);box-shadow:var(--shadow-pop)">--r-pop<br>--shadow-pop</div>
+        <div class="shape" style="border-radius:var(--r-widget);box-shadow:var(--shadow-lg)">--r-widget<br>--shadow-lg (hover)</div>
+        <div class="shape" style="border:0;border-radius:var(--r-widget);background:var(--blue);color:#fff;box-shadow:var(--edge-fill)">--edge-fill</div>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="motion">
+      <h2>Motion and hover</h2>
+      <p>Standalone pressables rise and their shadow grows. Rows, segments and menu items only tint.</p>
+      <div class="ex"><div class="ex__demo ex__demo--stack">
+        <div class="motion" id="motion-demo">
+          <div><code>--ease-bounce</code><div class="motion-track"><i style="--e:var(--ease-bounce)"></i></div></div>
+          <div><code>--ease-out</code><div class="motion-track"><i style="--e:var(--ease-out)"></i></div></div>
+          <div><code>--ease-in-out</code><div class="motion-track"><i style="--e:var(--ease-in-out)"></i></div></div>
+          <div><code>--ease-in</code><div class="motion-track"><i style="--e:var(--ease-in)"></i></div></div>
+        </div>
+        <button class="btn btn--sm" id="motion-play">Play</button>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="icons">
+      <h2>Icons</h2>
+      <div class="ex" data-no-html><div class="ex__demo ex__demo--wide"><div class="icon-grid" id="icon-grid"></div></div>
+        <pre class="ex__code" data-code>&lt;svg class="icon"&gt;&lt;use href="#i-star"/&gt;&lt;/svg&gt;</pre></div>
+    </section>
+
+    <p class="doc-part kicker">Components</p>
+
+    <section class="doc-section" id="buttons">
+      <h2>Buttons</h2>
+      <p>One main button per view. Label it with what happens. Avoid disabled buttons.</p>
+      <div class="ex"><div class="ex__demo">
+        <button class="btn btn--primary">Save and continue</button>
+        <button class="btn">Default</button>
+        <button class="btn btn--tinted">Tinted</button>
+        <button class="btn btn--green">Green</button>
+        <button class="btn btn--ghost">Ghost</button>
+        <button class="btn btn--plain">Plain</button>
+        <button class="btn btn--icon" aria-label="Add"><svg class="icon"><use href="#i-plus"/></svg></button>
+      </div></div>
+      <div class="ex"><div class="ex__demo">
+        <a class="btn btn--start" href="#buttons">Start now <svg class="icon"><use href="#i-arrow"/></svg></a>
+        <button class="btn btn--danger">Delete account</button>
+        <button class="btn btn--sm">Small</button>
+        <button class="btn btn--lg btn--primary">Large</button>
+      </div></div>
+      <div class="ex"><div class="ex__demo">
+        <div class="btn-group">
+          <button class="btn btn--primary">Save and continue</button>
+          <button class="btn">Save as draft</button>
+          <a href="#buttons">Cancel</a>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="segmented">
+      <h2>Segmented control</h2>
+      <p>Fires <code>deacald:change</code>.</p>
+      <div class="ex"><div class="ex__demo ex__demo--stack">
+        <div class="segmented" role="group" aria-label="Unit">
+          <button value="c" aria-pressed="true">°C</button>
+          <button value="f" aria-pressed="false">°F</button>
+        </div>
+        <div class="segmented segmented--sm" role="group" aria-label="Range">
+          <button value="week" aria-pressed="true">Week</button>
+          <button value="month" aria-pressed="false">Month</button>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="switch">
+      <h2>Switch, stepper, slider</h2>
+      <div class="ex"><div class="ex__demo">
+        <label class="switch"><input type="checkbox" checked><span class="switch__track"></span> Hints</label>
+        <div class="stepper" data-min="1" data-max="20">
+          <button data-step="-1" aria-label="Fewer"><svg class="icon"><use href="#i-minus"/></svg></button>
+          <output>6</output>
+          <button data-step="1" aria-label="More"><svg class="icon"><use href="#i-plus"/></svg></button>
+        </div>
+        <input type="range" class="range" min="0" max="100" value="65" aria-label="Volume" style="width:220px">
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="fields">
+      <h2>Fields</h2>
+      <p>Label, then hint, then input.</p>
+      <div class="ex"><div class="ex__demo ex__demo--stack">
+        <div class="field" style="width:min(100%,340px)">
+          <label class="field__label" for="f-name">Display name</label>
+          <span class="field__hint" id="f-name-hint">Shown on the leaderboard</span>
+          <input class="input" id="f-name" aria-describedby="f-name-hint">
+        </div>
+        <div class="field" style="width:min(100%,340px)">
+          <label class="field__label" for="f-unit">Unit</label>
+          <select class="input" id="f-unit"><option>Celsius</option><option>Fahrenheit</option></select>
+        </div>
+        <label class="search" style="width:min(100%,340px)"><svg class="icon"><use href="#i-search"/></svg><input placeholder="Search" aria-label="Search"></label>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="errors">
+      <h2>Errors</h2>
+      <p>Say what to do, in the label's words. Show it on the field and in a summary at the top.</p>
+      <div class="ex"><div class="ex__demo ex__demo--stack">
+        <div class="error-summary" role="alert" style="width:min(100%,420px)">
+          <h3 class="error-summary__title">There is a problem</h3>
+          <ul><li><a href="#f-rounds">Enter how many rounds to play</a></li></ul>
+        </div>
+        <div class="field is-error" style="width:min(100%,420px)">
+          <label class="field__label" for="f-rounds">How many rounds to play</label>
+          <span class="field__hint" id="f-rounds-hint">Between 1 and 20</span>
+          <span class="field__error" id="f-rounds-error"><span class="sr-only">Error:</span> Enter how many rounds to play</span>
+          <input class="input" id="f-rounds" aria-describedby="f-rounds-hint f-rounds-error" style="width:100px">
+        </div>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="text">
+      <h2>Inset and warning text</h2>
+      <div class="ex"><div class="ex__demo ex__demo--stack">
+        <p class="inset" style="max-width:52ch">Scores are saved on this device only.</p>
+        <p class="warning" style="max-width:52ch">Resetting deletes all your progress. You can't undo this.</p>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="chips">
+      <h2>Chips</h2>
+      <div class="ex"><div class="ex__demo">
+        <span class="chip">5 / 7</span>
+        <span class="chip chip--blue"><svg class="icon"><use href="#i-sparkle"/></svg> New</span>
+        <span class="chip chip--green"><svg class="icon"><use href="#i-check"/></svg> Done</span>
+        <span class="chip chip--gold"><svg class="icon"><use href="#i-star"/></svg> New best</span>
+        <span class="chip chip--red">Hard</span>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="badges">
+      <h2>Badges</h2>
+      <p>Flat tiles for icons, emoji and tiers; counts for numbers.</p>
+      <div class="ex"><div class="ex__demo">
+        <span class="badge"><svg class="icon"><use href="#i-star"/></svg></span>
+        <span class="badge badge--green"><svg class="icon"><use href="#i-check"/></svg></span>
+        <span class="badge badge--plain"><span class="emoji">☠️</span></span>
+        <span class="badge badge--lg"><svg class="icon"><use href="#i-trophy"/></svg></span>
+        <span class="badge badge--sm badge--green"><span class="emoji">🧁</span></span>
+      </div></div>
+      <div class="ex"><div class="ex__demo">
+        <span class="badge badge--bronze"><svg class="icon"><use href="#i-medal"/></svg></span>
+        <span class="badge badge--silver"><svg class="icon"><use href="#i-medal"/></svg></span>
+        <span class="badge badge--gold"><svg class="icon"><use href="#i-medal"/></svg></span>
+        <span class="badge badge--platinum"><span class="emoji">💎</span></span>
+        <span class="badge is-locked"><svg class="icon"><use href="#i-lock"/></svg></span>
+      </div></div>
+      <div class="ex"><div class="ex__demo">
+        <span class="count">3</span>
+        <span class="count count--green">12</span>
+        <span class="count count--red">99+</span>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="cards">
+      <h2>Cards</h2>
+      <div class="ex"><div class="ex__demo">
+        <div class="card" style="width:min(100%,320px)"><h3 style="margin:0 0 4px">A card</h3><p class="muted" style="margin:0">Anything goes inside.</p></div>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="art-cards">
+      <h2>Art cards</h2>
+      <div class="ex"><div class="ex__demo ex__demo--wide">
+        <div class="art-cards">
+          <a class="art-card" href="#art-cards">
+            <div class="art-card__art"><svg viewBox="0 0 220 124"><g class="art-card__bob"><circle cx="110" cy="62" r="34" style="fill:var(--blue)"/><text x="110" y="76" font-size="40" text-anchor="middle" style="fill:#fff">?</text></g></svg></div>
+            <div class="art-card__body"><div class="art-card__title">A game</div><div class="art-card__note">One line about it.</div></div>
+          </a>
+          <a class="art-card art-card--green" href="#art-cards">
+            <div class="art-card__art"><svg viewBox="0 0 220 124"><g class="art-card__bob"><rect x="82" y="30" width="56" height="64" rx="10" style="fill:var(--green)"/></g></svg></div>
+            <div class="art-card__body"><div class="art-card__title">Another</div><div class="art-card__note">Green art panel.</div></div>
+          </a>
+          <div class="art-card art-card--soon">
+            <div class="art-card__art"><svg class="icon"><use href="#i-plus"/></svg></div>
+            <div class="art-card__body"><div class="art-card__title">More soon</div><div class="art-card__note">A placeholder.</div></div>
+          </div>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="lists">
+      <h2>Lists</h2>
+      <div class="ex"><div class="ex__demo ex__demo--stack">
+        <div style="width:min(100%,380px)">
+          <div class="list-header">Playing</div>
+          <ul class="list">
+            <li><a class="list__row" href="#lists"><span class="list__icon list__icon--green"><svg class="icon"><use href="#i-bell"/></svg></span><span class="list__label">Reminders</span><span class="list__value">Daily</span><svg class="icon list__chev"><use href="#i-chevron"/></svg></a></li>
+            <li><a class="list__row" href="#lists"><span class="list__icon"><svg class="icon"><use href="#i-sparkle"/></svg></span><span class="list__label">Popup style<small>How achievements appear</small></span><span class="list__value">Pill</span><svg class="icon list__chev"><use href="#i-chevron"/></svg></a></li>
+            <li><button class="list__row is-danger">Reset all progress</button></li>
+          </ul>
+          <div class="list-footer">Saved on this device.</div>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="navbar">
+      <h2>Navigation</h2>
+      <div class="ex"><div class="ex__demo ex__demo--stack">
+        <div style="width:min(100%,380px)">
+          <div class="navbar"><a href="#navbar"><svg class="icon"><use href="#i-back"/></svg> Back</a><button>Edit</button></div>
+          <div class="large-title">Settings</div>
+        </div>
+        <nav class="tabbar" aria-label="Tabs" style="width:min(100%,380px);border:1px solid var(--line);border-radius:var(--r-card)">
+          <a class="tabbar__tab is-active" href="#navbar" aria-current="page"><svg class="icon"><use href="#i-home"/></svg>Home</a>
+          <a class="tabbar__tab" href="#navbar"><svg class="icon"><use href="#i-grid"/></svg>Games</a>
+          <a class="tabbar__tab" href="#navbar"><svg class="icon"><use href="#i-trophy"/></svg>Awards</a>
+          <a class="tabbar__tab" href="#navbar"><svg class="icon"><use href="#i-gear"/></svg>Settings</a>
+        </nav>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="menu">
+      <h2>Menu</h2>
+      <div class="ex"><div class="ex__demo">
+        <div class="menu" role="menu" aria-label="Actions">
+          <div class="menu__title">Best score</div>
+          <button role="menuitem">Copy <svg class="icon"><use href="#i-copy"/></svg></button>
+          <button role="menuitem">Share <svg class="icon"><use href="#i-share"/></svg></button>
+          <hr>
+          <button role="menuitem" class="is-danger">Delete <svg class="icon"><use href="#i-trash"/></svg></button>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="launcher">
+      <h2>Launcher</h2>
+      <div class="ex"><div class="ex__demo ex__demo--wide">
+        <div class="launcher" style="max-width:420px">
+          <a class="app" href="#launcher"><span class="app__icon"><svg class="icon"><use href="#i-thermo"/></svg></span>Blue</a>
+          <a class="app app--green" href="#launcher"><span class="app__icon"><svg class="icon"><use href="#i-chat"/></svg></span>Green<span class="count">5</span></a>
+          <a class="app app--plain" href="#launcher"><span class="app__icon"><svg class="icon"><use href="#i-flame"/></svg></span>Plain</a>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="progress">
+      <h2>Progress</h2>
+      <p>Segment bars count, stacked bars split a whole, bars and rings fill.</p>
+      <div class="ex"><div class="ex__demo ex__demo--stack">
+        <div class="segbar" id="seg-demo" data-segments="6" data-value="4" style="width:min(100%,320px)"></div>
+        <div class="segbar segbar--thin" data-segments="30" data-value="19" style="width:min(100%,320px)"></div>
+        <div class="segbar segbar--chunky segbar--green" data-segments="5" data-value="3" style="width:min(100%,320px)"></div>
+      </div>
+        <pre class="ex__code" data-code>deacald.segbar(document.querySelector("#seg-demo"), 5);</pre></div>
+      <button class="btn btn--sm" id="seg-step" style="margin-top:12px">Step</button>
+      <div class="ex"><div class="ex__demo ex__demo--stack">
+        <div style="width:min(100%,420px)">
+          <div class="stackbar stackbar--lg">
+            <span style="--w:45;--tone:var(--blue)"></span>
+            <span style="--w:25;--tone:var(--green)"></span>
+            <span style="--w:12;--tone:var(--blue-2)"></span>
+          </div>
+          <div class="legend-row">
+            <span class="legend"><i style="--tone:var(--blue)"></i> Played <b>45%</b></span>
+            <span class="legend"><i style="--tone:var(--green)"></i> Perfect <b>25%</b></span>
+            <span class="legend"><i style="--tone:var(--blue-2)"></i> Close <b>12%</b></span>
+          </div>
+        </div>
+      </div></div>
+      <div class="ex"><div class="ex__demo">
+        <div class="bar" style="--p:64;width:min(100%,240px)"><span></span></div>
+        <svg class="rings" viewBox="0 0 100 100" style="width:96px">
+          <circle class="ring-track" cx="50" cy="50" r="42"/><circle class="ring" cx="50" cy="50" r="42" pathLength="100" style="--p:72"/>
+          <circle class="ring-track" cx="50" cy="50" r="30"/><circle class="ring" cx="50" cy="50" r="30" pathLength="100" style="--p:55;--tone:var(--green)"/>
+        </svg>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="widgets">
+      <h2>Widgets</h2>
+      <div class="ex"><div class="ex__demo ex__demo--wide">
+        <div class="widget-grid">
+          <article class="widget">
+            <div class="widget__label"><svg class="icon"><use href="#i-star"/></svg> Plain</div>
+            <div class="spacer"></div>
+            <div class="widget__figure"><span class="widget__value">570</span><span class="widget__unit">/ 600</span></div>
+            <div class="widget__note">Best score</div>
+          </article>
+          <article class="widget widget--blue">
+            <div class="widget__label"><svg class="icon"><use href="#i-sun"/></svg> Blue</div>
+            <div class="spacer"></div>
+            <div class="widget__value">18°</div>
+          </article>
+          <article class="widget widget--green">
+            <div class="widget__label"><svg class="icon"><use href="#i-flame"/></svg> Green</div>
+            <div class="spacer"></div>
+            <div class="widget__figure"><span class="widget__value">6</span><span class="widget__unit">days</span></div>
+          </article>
+          <button class="widget widget--fill">
+            <div class="widget__label"><svg class="icon"><use href="#i-arrow"/></svg> Fill, tap</div>
+            <div class="spacer"></div>
+            <div class="widget__title">Play now</div>
+          </button>
+          <article class="widget widget--night">
+            <div class="widget__label"><svg class="icon"><use href="#i-moon"/></svg> Night</div>
+            <div class="spacer"></div>
+            <div class="widget__value">9:41</div>
+          </article>
+          <article class="widget widget--md">
+            <div class="widget__label"><svg class="icon"><use href="#i-grid"/></svg> Medium</div>
+            <div class="spacer"></div>
+            <div class="widget__title">Spans two columns</div>
+            <div class="widget__note">Also .widget--lg (2 × 2) and .widget--tall</div>
+          </article>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="digits">
+      <h2>Digit tiles</h2>
+      <p>Split-flap digits. Set the size with <code>--d</code>.</p>
+      <div class="ex" data-no-html><div class="ex__demo">
+        <div class="digits" id="demo-timer" style="--d:3.2rem"></div>
+      </div>
+        <pre class="ex__code" data-code>&lt;div class="digits" id="timer"&gt;&lt;/div&gt;
+deacald.digits(document.querySelector("#timer"), "0:15");</pre></div>
+    </section>
+
+    <section class="doc-section" id="achievements">
+      <h2>Achievement popups</h2>
+      <div class="ex" data-no-html><div class="ex__demo ex__demo--stack" id="ach-previews"></div>
+        <pre class="ex__code" data-code>deacald.achievement({ title: "Flawless", body: "A perfect score on every round.", tier: "gold" }, { style: "pill" });</pre></div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px">
+        <div class="segmented" id="ach-style" role="group" aria-label="Popup style">
+          <button value="pill" aria-pressed="true">Pill</button>
+          <button value="corner" aria-pressed="false">Corner</button>
+          <button value="banner" aria-pressed="false">Banner</button>
+        </div>
+        <button class="btn btn--sm" data-tier="bronze">Bronze</button>
+        <button class="btn btn--sm" data-tier="gold">Gold</button>
+        <button class="btn btn--sm" data-tier="platinum">Platinum</button>
+      </div>
+    </section>
+
+    <section class="doc-section" id="toast">
+      <h2>Toast and confetti</h2>
+      <div class="ex" data-no-html><div class="ex__demo">
+        <button class="btn" id="demo-toast">Show a toast</button>
+        <button class="btn" id="demo-confetti"><svg class="icon"><use href="#i-sparkle"/></svg> Confetti</button>
+      </div>
+        <pre class="ex__code" data-code>deacald.toast({ title: "Saved", body: "Your best score is safe.", icon: "check", color: "green" });
+deacald.confetti({ x: 200, y: 300 });</pre></div>
+    </section>
+
+    <section class="doc-section" id="modal">
+      <h2>Confirm modal</h2>
+      <p>Use the danger style only for actions that can't be undone.</p>
+      <div class="ex" data-no-html><div class="ex__demo">
+        <button class="btn" id="demo-modal">Open</button>
+        <button class="btn" id="demo-modal-danger">Reset progress</button>
+      </div>
+        <pre class="ex__code" data-code>const ok = await deacald.confirm({ icon: "☠️", title: "Permadeath", items: ["No hints."], confirm: "Take the challenge", cancel: "Not now" });</pre></div>
+    </section>
+
+    <section class="doc-section" id="tooltip">
+      <h2>Tooltip</h2>
+      <div class="ex"><div class="ex__demo">
+        <div class="tooltip" role="tooltip">
+          <span class="tooltip__title">Glasgow</span>
+          <span class="tooltip__grid"><span>GAMES</span><span>48</span><span>BEST</span><span>570</span><span>VS AVERAGE</span><span style="color:#7fe0b4">+12%</span></span>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="charts">
+      <h2>Charts</h2>
+      <div class="ex" data-no-html><div class="ex__demo" style="justify-content:space-around">
+        <svg id="demo-target" aria-hidden="true" style="width:min(100%,320px)"></svg>
+        <svg id="demo-line" aria-hidden="true" style="width:min(100%,420px)"></svg>
+      </div>
+        <pre class="ex__code" data-code>deacald.chart.target(svg, [{ dist: 0.4, label: "22°C" }, …], { zero: 10, rungs: […], ringLabels: […] });
+deacald.chart.line(svg, [{ value: 180, x: "11 Nov" }, …], { max: 600 });</pre></div>
+      <button class="btn btn--sm" id="charts-replay" style="margin-top:12px">Replay</button>
+    </section>
+
+    <p class="doc-part kicker">Page</p>
+
+    <section class="doc-section" id="glass-bar">
+      <h2>Glass bar</h2>
+      <p>A sticky frosted top bar, like this page's.</p>
+      <div class="ex"><div class="ex__demo ex__demo--wide">
+        <header class="glass-bar" style="position:relative;border:1px solid var(--line);border-radius:var(--r-card)">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px">
+            <b>Your app</b>
+            <span class="muted">Menu</span>
+          </div>
+        </header>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="hero">
+      <h2>Foil hero</h2>
+      <div class="ex"><div class="ex__demo ex__demo--wide">
+        <section class="hero" style="padding:40px 32px;border-radius:var(--r-widget)">
+          <span class="kicker">Kicker</span>
+          <h1 style="font-size:2.4rem;margin:8px 0 10px">A bold title</h1>
+          <p class="lede">A light line about it.</p>
+        </section>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="stats">
+      <h2>Stats</h2>
+      <div class="ex"><div class="ex__demo" style="gap:40px">
+        <div class="stat"><span class="stat__label">Players</span><span class="stat__value">12,480</span></div>
+        <div class="stat"><span class="stat__label">Best</span><span class="stat__value">570</span></div>
+        <div class="stat"><span class="stat__label">Change</span><span class="stat__value stat__value--mono" style="color:var(--green-ink)">▲ 58</span></div>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="table">
+      <h2>Data table</h2>
+      <p>Set columns with <code>--cols</code>.</p>
+      <div class="ex"><div class="ex__demo ex__demo--wide">
+        <div class="table" style="--cols: 26px minmax(0, 1fr) 70px 70px; max-width: 520px">
+          <div class="table__head"><span>#</span><span>Player</span><span class="num">Games</span><span class="num">Best</span></div>
+          <div class="table__row"><span class="mono muted">1</span><span class="table__cell"><span class="legend"><i style="--tone:var(--blue)"></i></span>Dean</span><span class="num">48</span><span class="num">570</span></div>
+          <div class="table__row"><span class="mono muted">2</span><span class="table__cell"><span class="legend"><i style="--tone:var(--green)"></i></span>Sam</span><span class="num">31</span><span class="num">545</span></div>
+          <div class="table__row"><span class="mono muted">3</span><span class="table__cell"><span class="legend"><i style="--tone:var(--blue-2)"></i></span>Alex</span><span class="num">12</span><span class="num">410</span></div>
+        </div>
+      </div></div>
+    </section>
+
+    <p class="doc-part kicker">Effects</p>
+
+    <section class="doc-section" id="glow">
+      <h2>Pointer glow</h2>
+      <p>Add <code>.glow</code>; tint with <code>--tone</code>.</p>
+      <div class="ex"><div class="ex__demo">
+        <div class="card glow" style="width:min(100%,280px);height:130px"><b>Move over me</b></div>
+        <div class="card glow" style="--tone:var(--green);width:min(100%,280px);height:130px"><b>Green</b></div>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="tilt">
+      <h2>Tilt card</h2>
+      <div class="ex"><div class="ex__demo">
+        <div class="card tilt" style="width:min(100%,320px);height:180px;border-radius:22px;background-color:#f4f8ff;color:#0f172a">
+          <span class="kicker">Laminated</span>
+          <h3 style="margin:6px 0 0">Tilt me</h3>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="reveal">
+      <h2>Reveal and count-up</h2>
+      <p>Children of <code>.reveal</code> play once it's seen. <code>data-count</code> numbers count up.</p>
+      <div class="ex"><div class="ex__demo ex__demo--stack reveal" id="reveal-demo">
+        <span class="kicker reveal-up">Revealed</span>
+        <span class="stat__value reveal-up" style="--d:100ms" data-count>12,480</span>
+        <p class="lede reveal-wipe" style="--d:200ms;margin:0">Wiped in from the left.</p>
+        <b class="reveal-pop" style="--d:400ms">Popped in</b>
+      </div></div>
+      <button class="btn btn--sm" id="reveal-replay" style="margin-top:12px">Replay</button>
+    </section>
+
+    <p class="doc-part kicker">Examples</p>
+
+    <section class="doc-section" id="ex-settings">
+      <h2>Settings screen</h2>
+      <div class="ex"><div class="ex__demo">
+        <div class="phone">
+          <div class="phone__status"><span>9:41</span><span>87%</span></div>
+          <div class="phone__body">
+            <div class="navbar"><a href="#ex-settings"><svg class="icon"><use href="#i-back"/></svg> Games</a><button>Edit</button></div>
+            <div class="large-title">Settings</div>
+            <label class="search"><svg class="icon"><use href="#i-search"/></svg><input placeholder="Search" aria-label="Search settings"></label>
+            <div class="list-header">Playing</div>
+            <ul class="list">
+              <li><label class="list__row"><span class="list__icon list__icon--green"><svg class="icon"><use href="#i-bell"/></svg></span><span class="list__label">Notifications</span><span class="switch"><input type="checkbox" checked aria-label="Notifications"><span class="switch__track"></span></span></label></li>
+              <li><div class="list__row"><span class="list__icon"><svg class="icon"><use href="#i-thermo"/></svg></span><span class="list__label">Unit</span><div class="segmented segmented--sm" role="group" aria-label="Unit"><button value="c" aria-pressed="true">°C</button><button value="f" aria-pressed="false">°F</button></div></div></li>
+            </ul>
+            <div class="list-header">Progress</div>
+            <ul class="list">
+              <li><a class="list__row" href="#ex-settings"><span class="list__icon"><svg class="icon"><use href="#i-trophy"/></svg></span><span class="list__label">Achievements</span><span class="count">2</span><svg class="icon list__chev"><use href="#i-chevron"/></svg></a></li>
+            </ul>
+            <div class="list-header">&nbsp;</div>
+            <ul class="list"><li><button class="list__row is-danger">Reset all progress</button></li></ul>
+          </div>
+          <nav class="tabbar" aria-label="Tabs">
+            <a class="tabbar__tab" href="#ex-settings"><svg class="icon"><use href="#i-home"/></svg>Home</a>
+            <a class="tabbar__tab" href="#ex-settings"><svg class="icon"><use href="#i-grid"/></svg>Games</a>
+            <a class="tabbar__tab" href="#ex-settings"><svg class="icon"><use href="#i-trophy"/></svg>Awards</a>
+            <a class="tabbar__tab is-active" href="#ex-settings"><svg class="icon"><use href="#i-gear"/></svg>Settings</a>
+          </nav>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="doc-section" id="ex-dashboard">
+      <h2>Dashboard</h2>
+      <p>Every tile tilts. Tap the challenge and the dice.</p>
+      <div class="ex" data-no-html><div class="ex__demo ex__demo--wide">
+        <div class="widget-grid dash">
+          <button class="widget widget--fill tilt" id="dash-challenge">
+            <span class="badge badge--sm badge--plain"><span class="emoji">☠️</span></span>
+            <div class="spacer"></div>
+            <div class="widget__title">Permadeath</div>
+            <div class="widget__note">Best: 505</div>
+          </button>
+
+          <article class="widget widget--md widget--night tilt">
+            <div class="row row--between">
+              <div class="widget__label"><svg class="icon"><use href="#i-clock"/></svg> Next round</div>
+              <span class="widget__note">Round 3 of 5</span>
+            </div>
+            <div class="spacer"></div>
+            <div class="digits" id="dash-timer" style="--d:2.6rem;align-self:center"></div>
+            <div class="spacer"></div>
+          </article>
+
+          <article class="widget widget--green tilt">
+            <div class="widget__label"><svg class="icon"><use href="#i-flame"/></svg> Streak</div>
+            <div class="spacer"></div>
+            <div class="widget__figure"><span class="widget__value">6</span><span class="widget__unit">days</span></div>
+            <div class="dots" style="margin-top:10px">
+              <span><i class="is-on"></i>M</span><span><i class="is-on"></i>T</span><span><i class="is-on"></i>W</span><span><i class="is-on"></i>T</span><span><i class="is-on"></i>F</span><span><i class="is-on"></i>S</span><span><i></i>S</span>
+            </div>
+          </article>
+
+          <article class="widget widget--lg tilt">
+            <div class="row row--between">
+              <div class="widget__label"><svg class="icon"><use href="#i-star"/></svg> Score trend</div>
+              <span class="chip chip--green"><svg class="icon"><use href="#i-check"/></svg> New best</span>
+            </div>
+            <div class="widget__figure" style="margin-top:8px"><span class="widget__value">510</span><span class="widget__unit">/ 600</span></div>
+            <div class="spacer"></div>
+            <svg id="dash-line" aria-hidden="true"></svg>
+          </article>
+
+          <article class="widget widget--blue tilt">
+            <div class="widget__label"><svg class="icon"><use href="#i-thermo"/></svg> Today</div>
+            <div class="spacer"></div>
+            <div class="widget__value">18°</div>
+            <div class="widget__note">Guess it within 2°</div>
+          </article>
+
+          <button class="widget widget--fill widget--green tilt" id="dash-dice">
+            <div class="row row--between"><span class="widget__label">Lucky dip</span><span class="dice"><span class="emoji">🎲</span></span></div>
+            <div class="spacer"></div>
+            <div class="widget__value" id="dash-dice-n">4</div>
+            <div class="widget__note">Roll a six</div>
+          </button>
+
+          <article class="widget widget--tall tilt">
+            <div class="widget__label"><svg class="icon"><use href="#i-trophy"/></svg> This week</div>
+            <div class="table" style="--cols: 16px minmax(0,1fr) auto; margin: 10px -8px 0">
+              <div class="table__row"><span class="mono muted">1</span><span class="table__cell">Sam</span><span class="num">570</span></div>
+              <div class="table__row"><span class="mono muted">2</span><span class="table__cell"><b>You</b></span><span class="num">545</span></div>
+              <div class="table__row"><span class="mono muted">3</span><span class="table__cell">Alex</span><span class="num">510</span></div>
+              <div class="table__row"><span class="mono muted">4</span><span class="table__cell">Jo</span><span class="num">480</span></div>
+              <div class="table__row"><span class="mono muted">5</span><span class="table__cell">Kit</span><span class="num">455</span></div>
+            </div>
+            <div class="spacer"></div>
+            <div class="widget__note">25 points to first</div>
+          </article>
+
+          <article class="widget widget--md tilt">
+            <div class="row row--between">
+              <div class="widget__label"><svg class="icon"><use href="#i-medal"/></svg> Achievements</div>
+              <span class="widget__note">8 / 14</span>
+            </div>
+            <div class="spacer"></div>
+            <div class="row row--between">
+              <span class="badge badge--sm badge--platinum"><span class="emoji">💎</span></span>
+              <span class="badge badge--sm badge--gold"><svg class="icon"><use href="#i-medal"/></svg></span>
+              <span class="badge badge--sm badge--silver"><svg class="icon"><use href="#i-medal"/></svg></span>
+              <span class="badge badge--sm badge--bronze"><svg class="icon"><use href="#i-medal"/></svg></span>
+              <span class="badge badge--sm is-locked"><svg class="icon"><use href="#i-lock"/></svg></span>
+            </div>
+            <div class="spacer"></div>
+            <div class="segbar segbar--thin" data-segments="14" data-value="8"></div>
+          </article>
+
+          <article class="widget tilt">
+            <div class="widget__label"><svg class="icon"><use href="#i-heart"/></svg> Goals</div>
+            <div class="spacer"></div>
+            <svg class="rings" viewBox="0 0 100 100" style="width:78px;align-self:center">
+              <circle class="ring-track" cx="50" cy="50" r="42"/><circle class="ring" cx="50" cy="50" r="42" pathLength="100" style="--p:80"/>
+              <circle class="ring-track" cx="50" cy="50" r="30"/><circle class="ring" cx="50" cy="50" r="30" pathLength="100" style="--p:45;--tone:var(--green)"/>
+            </svg>
+            <div class="spacer"></div>
+          </article>
+
+          <article class="widget widget--md tilt">
+            <div class="row row--between">
+              <div class="widget__label"><svg class="icon"><use href="#i-grid"/></svg> Activity</div>
+              <span class="widget__note">18 weeks</span>
+            </div>
+            <div class="heat" id="dash-heat" style="margin-top:10px"></div>
+          </article>
+
+          <article class="widget widget--night tilt">
+            <div class="widget__label"><svg class="icon"><use href="#i-sparkle"/></svg> Level</div>
+            <div class="spacer"></div>
+            <div class="widget__figure"><span class="widget__value">12</span></div>
+            <div class="bar" style="--p:68;margin-top:10px"><span></span></div>
+            <div class="widget__note" style="margin-top:6px">340 XP to 13</div>
+          </article>
+
+          <article class="widget widget--md tilt">
+            <div class="widget__label"><svg class="icon"><use href="#i-clock"/></svg> Time played</div>
+            <div class="spacer"></div>
+            <div class="widget__figure"><span class="widget__value" style="font-size:2.2rem">6h 40m</span></div>
+            <div class="stackbar" style="margin-top:10px">
+              <span style="--w:47;--tone:var(--blue)"></span>
+              <span style="--w:17;--tone:var(--green)"></span>
+              <span style="--w:10;--tone:var(--blue-2)"></span>
+            </div>
+            <div class="legend-row">
+              <span class="legend"><i style="--tone:var(--blue)"></i> Puzzles</span>
+              <span class="legend"><i style="--tone:var(--green)"></i> Quizzes</span>
+              <span class="legend"><i style="--tone:var(--blue-2)"></i> Other</span>
+            </div>
+          </article>
+
+          <article class="widget widget--blue tilt">
+            <div class="widget__label"><svg class="icon"><use href="#i-check"/></svg> Accuracy</div>
+            <div class="spacer"></div>
+            <div class="widget__figure"><span class="widget__value">92</span><span class="widget__unit">%</span></div>
+            <div class="segbar segbar--thin" data-segments="10" data-value="9" style="margin-top:10px"></div>
+          </article>
+
+          <a class="widget widget--md widget--fill tilt" href="#ex-dashboard">
+            <div class="row row--between">
+              <div class="widget__label"><svg class="icon"><use href="#i-gift"/></svg> Daily puzzle</div>
+              <span class="widget__note">Ends in 6h</span>
+            </div>
+            <div class="spacer"></div>
+            <div class="row row--between">
+              <div class="widget__title" style="font-size:1.35rem">Hotter or colder?</div>
+              <svg class="icon" style="width:28px;height:28px"><use href="#i-arrow"/></svg>
+            </div>
+          </a>
+
+          <article class="widget widget--green tilt">
+            <div class="widget__label"><svg class="icon"><use href="#i-chat"/></svg> Did you know</div>
+            <div class="spacer"></div>
+            <div class="widget__title" style="font-weight:500">−40° is the same in °C and °F.</div>
+          </article>
+        </div>
+      </div></div>
+    </section>
+  </main>
+</div>
+
+<script>
+// Each example shows its own markup above any code it brings (data-no-html: code only).
+// Runs before deacald.js, so the markup is as written.
+document.querySelectorAll(".ex:not([data-no-html])").forEach((ex) => {
+  const lines = ex.querySelector(".ex__demo").innerHTML.replace(/^\s*\n|\s+$/g, "").split("\n");
+  const indent = Math.min(...lines.filter((l) => l.trim()).map((l) => l.match(/^ */)[0].length));
+  const pre = document.createElement("pre");
+  pre.className = "ex__code";
+  pre.textContent = lines.map((l) => l.slice(indent)).join("\n");
+  ex.querySelector(".ex__demo").after(pre);
+});
+
+addEventListener("DOMContentLoaded", () => {
+  const $ = (id) => document.getElementById(id);
+
+  document.querySelectorAll(".ex__code").forEach((pre) => {
+    const code = pre.textContent;
+    const copy = document.createElement("button");
+    copy.className = "btn btn--sm ex__copy";
+    copy.textContent = "Copy";
+    copy.onclick = () => navigator.clipboard.writeText(code).then(() => { copy.textContent = "Copied"; setTimeout(() => { copy.textContent = "Copy"; }, 1200); });
+    pre.prepend(copy);
+  });
+
+  $("icon-grid").innerHTML = deacald.icons.map((n) => `<span>${deacald.icon(n)}${n}</span>`).join("");
+  $("motion-play").onclick = () => $("motion-demo").classList.toggle("is-on");
+  $("seg-step").onclick = () => deacald.segbar($("seg-demo"), (+$("seg-demo").dataset.value + 1) % 7);
+  $("reveal-replay").onclick = () => { $("reveal-demo").classList.remove("is-in"); void $("reveal-demo").offsetWidth; deacald.reveal(); };
+  document.querySelector(".glass-bar .segmented").addEventListener("deacald:change", (e) => $(e.detail).scrollIntoView({ behavior: "smooth" }));
+
+  let left = 15;
+  const tick = () => {
+    const t = `0:${String(left).padStart(2, "0")}`;
+    deacald.digits($("demo-timer"), t);
+    deacald.digits($("dash-timer"), t);
+    left = left ? left - 1 : 15;
+  };
+  tick();
+  setInterval(tick, 1000);
+
+  // Dashboard
+  deacald.chart.line($("dash-line"), [{ value: 180, x: "Mon" }, { value: 260, x: "Tue" }, { value: 240, x: "Wed" }, { value: 420, x: "Thu" }, { value: 510, x: "Fri" }], { max: 600, gridSteps: 2 });
+  $("dash-heat").innerHTML = Array.from({ length: 126 }, (_, i) => {
+    const v = Math.max(0, Math.sin(i * 1.7) * 0.5 + Math.sin(i * 0.31) * 0.4 + (i / 126) * 0.5);
+    return `<i style="--v:${Math.min(1, v).toFixed(2)}"></i>`;
+  }).join("");
+  $("dash-dice").onclick = (e) => {
+    const n = 1 + Math.floor(Math.random() * 6), dice = e.currentTarget.querySelector(".dice");
+    $("dash-dice-n").textContent = n;
+    dice.classList.remove("is-rolling"); void dice.offsetWidth; dice.classList.add("is-rolling");
+    if (n === 6) { const r = e.currentTarget.getBoundingClientRect(); deacald.confetti({ x: r.left + r.width / 2, y: r.top }); }
+  };
+  $("dash-challenge").onclick = () => deacald.confirm({ icon: "☠️", title: "Permadeath", body: "One big miss and it's over.", items: ["15 seconds per round.", "No hints."], confirm: "Take the challenge", cancel: "Not now" });
+
+  const SAMPLES = {
+    bronze: { title: "First steps", body: "Played your first round.", tier: "bronze" },
+    silver: { title: "Calibrated", body: "Within 1° of the answer.", tier: "silver" },
+    gold: { title: "Flawless", body: "A perfect score on every round.", tier: "gold" },
+    platinum: { title: "The whole set", body: "Unlocked every other achievement.", tier: "platinum" },
+  };
+  $("ach-previews").innerHTML = [["pill", "gold"], ["corner", "silver"], ["banner", "platinum"]]
+    .map(([style, tier]) => deacald.achievementMarkup(SAMPLES[tier], { style }).replace('class="ach ', 'class="ach is-static ')).join("");
+  let style = "pill";
+  $("ach-style").addEventListener("deacald:change", (e) => { style = e.detail; });
+  document.querySelectorAll("[data-tier]").forEach((b) => { b.onclick = () => deacald.achievement(SAMPLES[b.dataset.tier], { style }); });
+
+  $("demo-toast").onclick = () => deacald.toast({ title: "Saved", body: "Your best score is safe.", icon: "check", color: "green" });
+  $("demo-confetti").onclick = (e) => { const r = e.currentTarget.getBoundingClientRect(); deacald.confetti({ x: r.left + r.width / 2, y: r.top }); };
+  $("demo-modal").onclick = () => deacald.confirm({ icon: "☠️", title: "Permadeath", body: "One big miss and it's over.", items: ["15 seconds per round.", "No hints."], confirm: "Take the challenge", cancel: "Not now" });
+  $("demo-modal-danger").onclick = () => deacald.confirm({ title: "Reset all progress?", body: "This deletes your scores and achievements.", warning: "You can't undo this.", confirm: "Reset progress", danger: true });
+
+  const drawCharts = () => {
+    deacald.chart.target($("demo-target"),
+      [0.4, 3.1, 1.6, 7.5, 12, 4.8].map((dist, i) => ({ dist, label: ["22°C", "−4°C", "8°C", "31°C", "−15°C", "17°C"][i] })),
+      { zero: 10, rungs: [{ value: 10, pct: 14 }, { value: 5, pct: 40 }, { value: 0.56, pct: 100 }], ringLabels: [{ value: 10, text: "10°C" }, { value: 5, text: "5°C" }] });
+    deacald.chart.line($("demo-line"),
+      [{ value: 180, x: "11 Nov" }, { value: 260, x: "14 Nov" }, { value: 420, x: "Yesterday" }, { value: 455, x: "16:10" }, { value: 510, x: "17:05" }],
+      { max: 600, delay: 0.3 });
+  };
+  drawCharts();
+  $("charts-replay").onclick = drawCharts;
+});
+</script>
+</body>
+</html>
