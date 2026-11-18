@@ -47,13 +47,13 @@ Segmented controls and steppers fire a `deacald:change` event.
 
 ## Use it in other projects
 
-This repo is the one place where the kit gets changed. Other projects keep a copy in their `res/` folder, and they update it with a small script called `sync-deacald.mjs`:
+Add this repo as a git submodule:
 
 ```bash
-node sync-deacald.mjs
+git submodule add https://github.com/deacaldw/deacald.css res/deacald
 ```
 
-The script downloads `deacald.css` and `deacald.js` from this repo's `main` branch. Push your changes here first, and then run it in each project.
+Then load `res/deacald/deacald.css` and `res/deacald/deacald.js` in your page. The submodule stays on the commit you added until you move it. To get the latest version, run `git submodule update --remote res/deacald` in that project and commit the change.
 
 ## See the docs
 
@@ -61,4 +61,4 @@ The script downloads `deacald.css` and `deacald.js` from this repo's `main` bran
 python -m http.server 8000
 ```
 
-Then open http://localhost:8000.
+Then open http://localhost:8000. To build the docs site, run `./build.sh`, and it copies everything it needs into `public/`.
